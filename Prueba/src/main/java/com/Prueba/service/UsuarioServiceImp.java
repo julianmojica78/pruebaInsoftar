@@ -32,12 +32,14 @@ public class UsuarioServiceImp implements IUsuarioService {
 
 	@Override
 	public Usuario guardar(Usuario obj) {
-		List<Usuario> listaUsuario = repo.findAll();
-		for (Usuario usuario : listaUsuario) {
-			if (usuario.getCorreo().equals(obj.getCorreo())) {
+
+		List<Usuario> usuario = repo.listaUsuarios(obj.getCorreo(), obj.getCedula());
+		for (Usuario usuario2 : usuario) {
+			if (usuario2.getCorreo().equals(obj.getCorreo())) {
 				throw new NotFoundModelException("Correo ya Registrado");
-			} else if (usuario.getCedula().equals(obj.getCedula())) {
-				throw new NotFoundModelException("Cedula ya Registrado");
+			}
+			if (usuario2.getCedula().equals(obj.getCedula())) {
+				throw new NotFoundModelException("Cedula ya Registrada");
 			}
 		}
 		return repo.save(obj);
@@ -45,11 +47,26 @@ public class UsuarioServiceImp implements IUsuarioService {
 
 	@Override
 	public Usuario editar(UsuarioDto obj) {
-		repo.findById(obj.getId()).orElseThrow(() -> new NotFoundModelException("Usuario no Encontrado"));
+		Usuario user = repo.findById(obj.getId())
+				.orElseThrow(() -> new NotFoundModelException("Usuario no Encontrado"));
 
 		ModelMapper modelMapper = new ModelMapper();
 		Usuario usuario = modelMapper.map(obj, Usuario.class);
 
+		if (user.getCorreo().equals(usuario.getCorreo()) & user.getCedula().equals(usuario.getCedula())) {
+			return repo.save(usuario);
+		} else {
+			List<Usuario> listaUsuario = repo.listaUsuarios(obj.getCorreo(), obj.getCedula());
+			for (Usuario usuario2 : listaUsuario) {
+				if (usuario2.getCorreo().equals(obj.getCorreo())) {
+					throw new NotFoundModelException("Correo ya Registrado");
+				}
+				if (usuario2.getCedula().equals(obj.getCedula())) {
+					throw new NotFoundModelException("Cedula ya Registrada");
+				}
+			}
+
+		}
 		return repo.save(usuario);
 	}
 
@@ -58,5 +75,4 @@ public class UsuarioServiceImp implements IUsuarioService {
 		// TODO Auto-generated method stub
 
 	}
-
 }
