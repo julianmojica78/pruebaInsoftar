@@ -1,0 +1,123 @@
+<h1>Usuarios</h1>
+<hr>
+
+<div class="card mb-3">
+    <div class="card-body">
+
+        <div [hidden]="!isVisible">
+
+            <button type="button" class="btn btn-primary" (click)="Visibilidad()">Crear Usuario</button>
+            <br><br>
+            <table mat-table [dataSource]="dataSource" class="table">
+
+                <!-- Id Column -->
+                <ng-container matColumnDef="id">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef scope="col"> Id </th>
+                    </thead>
+                    <th scope="row" *matCellDef="let element"> {{element.id}} </th>
+                </ng-container>
+
+                <!-- Nombre Column -->
+                <ng-container matColumnDef="nombre">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef scope="col"> Nombre </th>
+                    </thead>
+                    <td *matCellDef="let element"> {{element.nombre}} </td>
+                </ng-container>
+
+                <!-- Apellido Column -->
+                <ng-container matColumnDef="apellido">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef scope="col"> Apellido </th>
+                    </thead>
+                    <td *matCellDef="let element"> {{element.apellido}} </td>
+                </ng-container>
+
+                <!-- Cedula Column -->
+                <ng-container matColumnDef="cedula">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef scope="col"> Cedula </th>
+                    </thead>
+                    <td *matCellDef="let element"> {{element.cedula}} </td>
+                </ng-container>
+
+                <!-- Correo Column -->
+                <ng-container matColumnDef="correo">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef scope="col"> Correo </th>
+                    </thead>
+                    <td *matCellDef="let element"> {{element.correo}} </td>
+                </ng-container>
+
+                <!-- Telefono Column -->
+                <ng-container matColumnDef="telefono">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef scope="col"> Telefono </th>
+                    </thead>
+                    <td *matCellDef="let element"> {{element.telefono}} </td>
+                </ng-container>
+
+                <!-- Acciones Column -->
+                <ng-container matColumnDef="acciones">
+                    <thead class="thead-dark">
+                        <th *matHeaderCellDef> Editar </th>
+                    </thead>
+                    <td *matCellDef="let row">
+                        <button type="button" class="btn btn-info" (click)="obtenerUsuario(row.id)">
+                            <span class="material-icons">edit</span>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" [length]="cantidad" (page)="cambioPagina($event)">
+            </mat-paginator>
+        </div>
+
+        <div [hidden]="isVisible">
+            <h2>Crear Usuario</h2>
+            <hr>
+            <form [formGroup]="form" #frmUsuario="ngForm" (ngSubmit)="guardar()" class="card">
+                <div [hidden]="true">
+                    <mat-form-field>
+                        <input matInput placeholder="Id" required formControlName="id">
+                    </mat-form-field>
+                </div>
+                <mat-form-field hintLabel="Max 49 caracteres">
+                    <input matInput #inputNombre minlength="4" maxlength="49" placeholder="Nombre Usuario" required pattern="[A-Za-z ]{4,49}" formControlName="nombre">
+                    <mat-hint align="end">{{inputNombre.value?.length || 0}}/49</mat-hint>
+                </mat-form-field>
+                <br>
+                <mat-form-field hintLabel="Max 49 caracteres">
+                    <input matInput #inputApellido minlength="4" maxlength="49" placeholder="Apellido Usuario" required pattern="[A-Za-z ]{4,49}" formControlName="apellido">
+                    <mat-hint align="end">{{inputApellido.value?.length || 0}}/49</mat-hint>
+                </mat-form-field>
+                <br>
+                <mat-form-field hintLabel="Max 10 caracteres">
+                    <input matInput #inputCedula minlength="4" maxlength="10" placeholder="Cedula Usuario" required pattern="[0-9]{4,10}" formControlName="cedula">
+                    <mat-hint align="end">{{inputCedula.value?.length || 0}}/10</mat-hint>
+                </mat-form-field>
+                <br>
+                <mat-form-field hintLabel="Max 49 caracteres">
+                    <input type="email" matInput #inputCorreo minlength="4" maxlength="49" placeholder="Correo" required formControlName="correo">
+                    <mat-hint align="end">{{inputCorreo.value?.length || 0}}/49</mat-hint>
+                </mat-form-field>
+                <br>
+                <mat-form-field hintLabel="Max 10 caracteres">
+                    <input matInput #inputTelefono minlength="4" maxlength="10" placeholder="Telefono" required pattern="[0-9]{4,10}" formControlName="telefono">
+                    <mat-hint align="end">{{inputTelefono.value?.length || 0}}/10</mat-hint>
+                </mat-form-field>
+
+                <div class="boton">
+                    <button class="btn btn-primary" [disabled]="frmUsuario.invalid" style="margin: 10px;" type="submit">Guardar</button>
+                    <button type="button" class="btn btn-danger" (click)="noVisibilidad()">Regresar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
